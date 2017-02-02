@@ -18,7 +18,7 @@ heroku ps:wait --app sushi && notify-send 'sushi release is live'
 ### Installation
 
 ```bash
-$ heroku plugins:install uhoh-itsmaciek/heroku-ps-wait
+$ heroku plugins:install heroku-ps-wait
 ```
 
 #### Update
