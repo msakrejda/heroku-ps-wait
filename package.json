@@ -1,0 +1,33 @@
+{
+  "name": "heroku-ps-wait",
+  "version": "0.0.1",
+  "description": "A heroku plugin to wait for a Private Spaces release to cycle in.",
+  "main": "index.js",
+  "author": "Maciek Sakrejda m.sakrejda@gmail.com",
+  "repository": "uhoh-itsmaciek/heroku-ps-wait",
+  "bugs": {
+    "url": "https://github.com/uhoh-itsmaciek/heroku-ps-wait/issues"
+  },
+  "keywords": [
+    "heroku-plugin"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "co": "4.6.0",
+    "co-wait": "0.0.0",
+    "heroku-cli-util": "6.0.15",
+    "smooth-progress": "1.1.0"
+  },
+  "scripts": {
+    "test": "standard && mocha"
+  },
+  "devDependencies": {
+    "chai": "3.5.0",
+    "chai-as-promised": "6.0.0",
+    "eslint": "3.14.1",
+    "eslint-config-standard": "6.2.1",
+    "mocha": "3.2.0",
+    "nock": "9.0.2",
+    "standard": "8.6.0"
+  }
+}
