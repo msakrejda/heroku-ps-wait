@@ -4,6 +4,10 @@ const cli = require('heroku-cli-util')
 const co = require('co')
 
 function * psWait (context, heroku) {
+  if (context.flags['with-run'] && context.flags['type']) {
+    cli.exit(1, 'Cannot specify both --type and --with-run')
+  }
+
   let [ appInfo, releases ] = [
     yield heroku.get(`/apps/${context.app}`),
     yield heroku.request({
@@ -36,6 +40,7 @@ function * psWait (context, heroku) {
     let dynos = yield heroku.get(`/apps/${context.app}/dynos`)
     dynos = dynos.filter((dyno) => dyno.type !== 'release')
                  .filter((dyno) => context.flags['with-run'] || dyno.type !== 'run')
+                 .filter((dyno) => !context.flags.type || dyno.type === context.flags.type)
 
     let onLatest = dynos.filter((dyno) => {
       return dyno.state === 'up' && dyno.release.id === latestRelease.id
@@ -71,7 +76,8 @@ all dynos are on the latest release version.
   needsApp: true,
   flags: [
     { name: 'wait-interval', description: 'how frequently to poll in seconds (to avoid rate limiting)', hasValue: true },
-    { name: 'with-run', description: 'whether to wait for one-off run dynos', hasValue: false }
+    { name: 'with-run', description: 'whether to wait for one-off run dynos', hasValue: false },
+    { name: 'type', description: 'wait for one specific dyno type', hasValue: true }
   ],
   run: cli.command(co.wrap(psWait))
 }

@@ -26,6 +26,15 @@ describe('ps:wait', () => {
     nock.cleanAll()
   })
 
+  it('exits with an error if both --type and --with-run are specified', () => {
+    return cmd.run({app: 'sushi', args: {}, flags: {'type': 'web', 'with-run': true}})
+              .catch((err) => {
+                if (err.code !== 1) throw err
+                expect(cli.stdout).to.be.empty
+                expect(cli.stderr).to.equal(' ▸    Cannot specify both --type and --with-run\n')
+              })
+  })
+
   it('exits with an error if the app is not in a Private Space', () => {
     heroku.get('/apps/sushi')
           .reply(200, { name: 'sushi' })
@@ -210,6 +219,40 @@ describe('ps:wait', () => {
               .then(() => {
                 expect(cli.stdout).to.be.empty
                 expect(cli.stderr).to.equal('Waiting for every dyno to be running v23... 0 / 2\nWaiting for every dyno to be running v23... 0 / 1\nWaiting for every dyno to be running v23... 2 / 2, done\n')
+              })
+  })
+
+  it('waits for dynos of a specific type with --type flag', () => {
+    heroku.get('/apps/sushi')
+          .reply(200, {
+            name: 'sushi-cedar',
+            space: {
+              id: '00000000-0000-0000-0000-000000000000',
+              name: 'my-space'
+            }
+          })
+    heroku.get('/apps/sushi/releases')
+          .reply(200, [ { id: '00000000-0000-0000-0000-000000000001', version: '23' } ])
+    heroku.get('/apps/sushi/dynos')
+          .reply(200, [
+            { release: { id: '00000000-0000-0000-0000-000000000000' }, state: 'up', type: 'worker' },
+            { release: { id: '00000000-0000-0000-0000-000000000000' }, state: 'up', type: 'web' }
+          ])
+          .get('/apps/sushi/dynos')
+          .reply(200, [
+            { release: { id: '00000000-0000-0000-0000-000000000000' }, state: 'up', type: 'worker' },
+            { release: { id: '00000000-0000-0000-0000-000000000001' }, state: 'starting', type: 'web' }
+          ])
+          .get('/apps/sushi/dynos')
+          .reply(200, [
+            { release: { id: '00000000-0000-0000-0000-000000000001' }, state: 'starting', type: 'worker' },
+            { release: { id: '00000000-0000-0000-0000-000000000001' }, state: 'up', type: 'web' }
+          ])
+
+    return cmd.run({app: 'sushi', args: {}, flags: {'wait-interval': '0.001', 'type': 'web'}})
+              .then(() => {
+                expect(cli.stdout).to.be.empty
+                expect(cli.stderr).to.equal('Waiting for every dyno to be running v23... 0 / 1\nWaiting for every dyno to be running v23... 0 / 1\nWaiting for every dyno to be running v23... 1 / 1, done\n')
               })
   })
 })
