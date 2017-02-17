@@ -34,7 +34,8 @@ function * psWait (context, heroku) {
 
   while (true) {
     let dynos = yield heroku.get(`/apps/${context.app}/dynos`)
-    dynos = dynos.filter((dyno) => !(/release\.\d+/.test(dyno.name)))
+    dynos = dynos.filter((dyno) => dyno.type !== 'release')
+                 .filter((dyno) => context.flags['with-run'] || dyno.type !== 'run')
 
     let onLatest = dynos.filter((dyno) => {
       return dyno.state === 'up' && dyno.release.id === latestRelease.id
@@ -69,7 +70,8 @@ all dynos are on the latest release version.
   needsAuth: true,
   needsApp: true,
   flags: [
-    { name: 'wait-interval', description: 'how frequently to poll in seconds (to avoid rate limiting)', hasValue: true }
+    { name: 'wait-interval', description: 'how frequently to poll in seconds (to avoid rate limiting)', hasValue: true },
+    { name: 'with-run', description: 'whether to wait for one-off run dynos', hasValue: false }
   ],
   run: cli.command(co.wrap(psWait))
 }
