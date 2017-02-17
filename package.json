@@ -1,6 +1,6 @@
 {
   "name": "heroku-ps-wait",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "A heroku plugin to wait for a Private Spaces release to cycle in.",
   "main": "index.js",
   "author": "Maciek Sakrejda m.sakrejda@gmail.com",
