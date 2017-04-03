@@ -75,9 +75,9 @@ all dynos are on the latest release version.
   needsAuth: true,
   needsApp: true,
   flags: [
-    { name: 'wait-interval', description: 'how frequently to poll in seconds (to avoid rate limiting)', hasValue: true },
-    { name: 'with-run', description: 'whether to wait for one-off run dynos', hasValue: false },
-    { name: 'type', description: 'wait for one specific dyno type', hasValue: true }
+    { name: 'wait-interval', char: 'w', description: 'how frequently to poll in seconds (to avoid rate limiting)', hasValue: true },
+    { name: 'with-run', char: 'R', description: 'whether to wait for one-off run dynos', hasValue: false },
+    { name: 'type', char: 't', description: 'wait for one specific dyno type', hasValue: true }
   ],
   run: cli.command(co.wrap(psWait))
 }
