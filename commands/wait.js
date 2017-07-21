@@ -8,20 +8,13 @@ function * psWait (context, heroku) {
     cli.exit(1, 'Cannot specify both --type and --with-run')
   }
 
-  let [ appInfo, releases ] = [
-    yield heroku.get(`/apps/${context.app}`),
-    yield heroku.request({
-      path: `/apps/${context.app}/releases`,
-      partial: true,
-      headers: {
-        'Range': 'version ..; max=1, order=desc'
-      }
-    })
-  ]
-
-  if (!appInfo.space) {
-    cli.exit(1, `App ${context.app} is not in a Private Space`)
-  }
+  let releases = yield heroku.request({
+    path: `/apps/${context.app}/releases`,
+    partial: true,
+    headers: {
+      'Range': 'version ..; max=1, order=desc'
+    }
+  })
 
   if (releases.length === 0) {
     cli.exit(1, `App ${context.app} has no releases`)
@@ -66,11 +59,14 @@ function * psWait (context, heroku) {
 module.exports = {
   topic: 'ps',
   command: 'wait',
-  description: 'wait for a private spaces release to cycle in',
+  description: 'wait for a release to cycle in',
   help: `
-Applications in Heroku Private Spaces cycle dynos one at a time when 
-a new release is made. This command allows you to wait until
-all dynos are on the latest release version.
+When a release is created, it may take a while for all dynos to be
+running the new version. This is especially true for applications in
+Heroku Private Spaces or using the common runtime preboot feature,
+where dynos cycle in gradually when a new release is deployed. This
+command allows you to wait until all dynos are on the latest release
+version.
   `,
   needsAuth: true,
   needsApp: true,

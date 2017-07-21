@@ -35,29 +35,7 @@ describe('ps:wait', () => {
               })
   })
 
-  it('exits with an error if the app is not in a Private Space', () => {
-    heroku.get('/apps/sushi')
-          .reply(200, { name: 'sushi' })
-    heroku.get('/apps/sushi/releases')
-          .reply(200, [])
-
-    return cmd.run({app: 'sushi', args: {}, flags: {}})
-              .catch((err) => {
-                if (err.code !== 1) throw err
-                expect(cli.stdout).to.be.empty
-                expect(cli.stderr).to.equal(' ▸    App sushi is not in a Private Space\n')
-              })
-  })
-
   it('exits with an error if the app has no releases', () => {
-    heroku.get('/apps/sushi')
-          .reply(200, {
-            name: 'sushi',
-            space: {
-              id: '00000000-0000-0000-0000-000000000000',
-              name: 'my-space'
-            }
-          })
     heroku.get('/apps/sushi/releases')
           .reply(200, [])
 
@@ -70,14 +48,6 @@ describe('ps:wait', () => {
   })
 
   it('exits right away with no output if app is already on the latest release', () => {
-    heroku.get('/apps/sushi')
-          .reply(200, {
-            name: 'sushi-cedar',
-            space: {
-              id: '00000000-0000-0000-0000-000000000000',
-              name: 'my-space'
-            }
-          })
     heroku.get('/apps/sushi/releases')
           .reply(200, [ { id: '00000000-0000-0000-0000-000000000000', version: '23' } ])
     heroku.get('/apps/sushi/dynos')
@@ -93,14 +63,6 @@ describe('ps:wait', () => {
   })
 
   it('waits for dynos to be up and on current release', () => {
-    heroku.get('/apps/sushi')
-          .reply(200, {
-            name: 'sushi-cedar',
-            space: {
-              id: '00000000-0000-0000-0000-000000000000',
-              name: 'my-space'
-            }
-          })
     heroku.get('/apps/sushi/releases')
           .reply(200, [ { id: '00000000-0000-0000-0000-000000000001', version: '23' } ])
     heroku.get('/apps/sushi/dynos')
@@ -124,14 +86,6 @@ describe('ps:wait', () => {
   })
 
   it('ignores release dynos', () => {
-    heroku.get('/apps/sushi')
-          .reply(200, {
-            name: 'sushi-cedar',
-            space: {
-              id: '00000000-0000-0000-0000-000000000000',
-              name: 'my-space'
-            }
-          })
     heroku.get('/apps/sushi/releases')
           .reply(200, [ { id: '00000000-0000-0000-0000-000000000001', version: '23' } ])
     heroku.get('/apps/sushi/dynos')
@@ -156,14 +110,6 @@ describe('ps:wait', () => {
   })
 
   it('ignores run dynos by default', () => {
-    heroku.get('/apps/sushi')
-          .reply(200, {
-            name: 'sushi-cedar',
-            space: {
-              id: '00000000-0000-0000-0000-000000000000',
-              name: 'my-space'
-            }
-          })
     heroku.get('/apps/sushi/releases')
           .reply(200, [ { id: '00000000-0000-0000-0000-000000000001', version: '23' } ])
     heroku.get('/apps/sushi/dynos')
@@ -190,14 +136,6 @@ describe('ps:wait', () => {
   })
 
   it('includes run dynos with --with-run flag', () => {
-    heroku.get('/apps/sushi')
-          .reply(200, {
-            name: 'sushi-cedar',
-            space: {
-              id: '00000000-0000-0000-0000-000000000000',
-              name: 'my-space'
-            }
-          })
     heroku.get('/apps/sushi/releases')
           .reply(200, [ { id: '00000000-0000-0000-0000-000000000001', version: '23' } ])
     heroku.get('/apps/sushi/dynos')
@@ -223,14 +161,6 @@ describe('ps:wait', () => {
   })
 
   it('waits for dynos of a specific type with --type flag', () => {
-    heroku.get('/apps/sushi')
-          .reply(200, {
-            name: 'sushi-cedar',
-            space: {
-              id: '00000000-0000-0000-0000-000000000000',
-              name: 'my-space'
-            }
-          })
     heroku.get('/apps/sushi/releases')
           .reply(200, [ { id: '00000000-0000-0000-0000-000000000001', version: '23' } ])
     heroku.get('/apps/sushi/dynos')

@@ -1,8 +1,11 @@
 # heroku-ps-wait
 
-Applications in Heroku Private Spaces cycle dynos one at a time when 
-a new release is made. This command allows you to wait until
-all dynos are on the latest release version.
+When a release is created, it may take a while for all dynos to be
+running the new version. This is especially true for applications in
+Heroku Private Spaces or using the common runtime preboot feature,
+where dynos cycle in gradually when a new release is deployed. This
+command allows you to wait until all dynos are on the latest release
+version.
 
 ### Usage
 
