@@ -15,7 +15,7 @@ This can be especially useful combined with desktop
 notifications. E.g., on Ubuntu, you can use `notify-send`:
 
 ```bash
-heroku ps:wait --app sushi && notify-send 'sushi release is live'
+heroku ps:wait --app sushi && notify-send 'your sushi is ready!'
 ```
 
 ### Installation
