@@ -8,6 +8,10 @@
   "bugs": {
     "url": "https://github.com/uhoh-itsmaciek/heroku-ps-wait/issues"
   },
+  "files": [
+    "/index.js",
+    "/commands"
+  ],
   "keywords": [
     "heroku-plugin"
   ],
