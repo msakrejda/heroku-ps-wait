@@ -1,3 +1,17 @@
+# Deprecated
+
+This plugin has been [incorporated into the Heroku
+CLI](https://github.com/heroku/cli/pull/1175) and the functionality is
+now available natively as of Heroku CLI v7.21. If you have installed
+it previously, you can start using the native version by uninstalling
+this plugin:
+
+```bash
+heroku plugins:uninstall heroku-ps-wait
+```
+
+For historical documentation, see below.
+
 # heroku-ps-wait
 
 When a release is created, it may take a while for all dynos to be
